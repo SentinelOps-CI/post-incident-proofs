@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Lean toolchain
         run: |
           wget https://github.com/leanprover/lean4/releases/download/v4.7.0/lean-4.7.0-linux.tar.gz
@@ -35,7 +35,7 @@ jobs:
     needs: verify
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Lean toolchain
         run: |
           wget https://github.com/leanprover/lean4/releases/download/v4.7.0/lean-4.7.0-linux.tar.gz
@@ -50,6 +50,6 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Dependency review
         uses: actions/dependency-review-action@v4
