@@ -7,8 +7,8 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER:?set-in-env}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:?set-in-env}
     volumes:
       - ./dashboards:/etc/grafana/provisioning/dashboards
       - ./datasources:/etc/grafana/provisioning/datasources
@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.53.0
     container_name: post-incident-proofs-prometheus
     ports:
       - "9090:9090"
@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
 
   loki:
-    image: grafana/loki:latest
+    image: grafana/loki:3.0.0
     container_name: post-incident-proofs-loki
     ports:
       - "3100:3100"
@@ -51,6 +51,7 @@ services:
     environment:
       - LOG_LEVEL=INFO
       - HMAC_KEY_FILE=/app/keys/hmac.key
+      - APP_HMAC_KEY=${APP_HMAC_KEY:?set-in-env}
     volumes:
       - ./logs:/app/logs
       - ./keys:/app/keys

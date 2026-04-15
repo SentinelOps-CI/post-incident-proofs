@@ -1,14 +1,8 @@
 import Lake
 open Lake DSL
 
-package post-incident-proofs {
-  -- add package configuration options here
+package post_incident_proofs where
   srcDir := "src"
-  -- dependencies
-  require lean from git "https://github.com/leanprover/lean4.git" @ "v4.7.0"
-  require runtime-safety-kernels from git "https://github.com/runtime-safety/runtime-safety-kernels.git" @ "main"
-  require security-envelopes from git "https://github.com/security-envelopes/security-envelopes.git" @ "main"
-}
 
 @[default_target]
 lean_lib PostIncidentProofs {

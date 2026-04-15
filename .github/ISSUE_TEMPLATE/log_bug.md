@@ -1,59 +1,53 @@
 ---
 name: Log Bug Report
-about: Report a bug in the tamper-evident logging system
+about: Report a logging integrity or verifier issue
 title: "[LOG BUG] "
 labels: ["bug", "logging"]
 assignees: ""
 ---
 
-## Bug Description
+## Summary
 
-A clear and concise description of the bug.
+Describe the failure and why it is a bug.
 
-## Steps to Reproduce
+## Reproduction
 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+1. Command(s) run:
+   ```bash
+   lake exe log_verifier
+   ```
+2. Inputs used:
+3. Observed output:
 
-## Expected Behavior
+## Expected Result
 
-What you expected to happen.
+What should have happened.
 
-## Actual Behavior
+## Actual Result
 
-What actually happened.
+What happened instead.
 
-## Severity
+## Impact
 
-- [ ] Critical - System crash or data loss
-- [ ] High - Major functionality broken
-- [ ] Medium - Minor functionality broken
-- [ ] Low - Cosmetic issue
+- [ ] Critical
+- [ ] High
+- [ ] Medium
+- [ ] Low
 
-## Logging Component
+## Component
 
-- [ ] HMAC Verification
-- [ ] Counter Monotonicity
-- [ ] Chain Integrity
-- [ ] Tamper Detection
-- [ ] Performance
-- [ ] Other
-
-## Log Output
-
-```
-Paste any relevant log output here
-```
+- [ ] Entry signing
+- [ ] Chain integrity
+- [ ] Counter sequencing
+- [ ] Verification result reporting
+- [ ] Performance regression
 
 ## Environment
 
-- OS: [e.g. Ubuntu 22.04]
-- Lean Version: [e.g. 4.7.0]
-- Lake Version: [e.g. 3.4.0]
-- Architecture: [e.g. x86_64]
+- OS:
+- Lean version:
+- Relevant branch/commit:
 
 ## Additional Context
 
-Add any other context about the problem here.
+Attach relevant logs, command output, or minimal input data.

@@ -7,5 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          ./scripts/policy_lint.py policies/*.yaml
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install lint dependencies
+        run: python -m pip install --upgrade pip -r requirements-dev.txt
+      - name: Run policy linter
+        run: python ./scripts/policy_lint.py policies/*.yaml

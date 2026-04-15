@@ -9,6 +9,7 @@ lakefile.olean
 
 # Build artifacts
 build/
+dist/
 target/
 *.exe
 *.so

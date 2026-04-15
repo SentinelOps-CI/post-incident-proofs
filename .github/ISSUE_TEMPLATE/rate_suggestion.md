@@ -1,49 +1,45 @@
 ---
-name: Rate Limit Suggestion
-about: Suggest improvements to the rate limiting system
+name: Rate Limiting Improvement
+about: Suggest improvements for the rate verification model or tooling
 title: "[RATE] "
 labels: ["enhancement", "rate-limiting"]
 assignees: ""
 ---
 
-## Suggestion Description
+## Problem
 
-A clear and concise description of your suggestion.
+What limitation or issue are you trying to address?
 
-## Problem Statement
+## Proposed Improvement
 
-What problem does this suggestion solve?
+Describe the proposed behavior or architecture change.
 
-## Proposed Solution
+## Affected Area
 
-Describe your proposed solution.
+- [ ] Rate model semantics
+- [ ] Verification logic
+- [ ] Throughput behavior
+- [ ] Multi-tenant behavior
+- [ ] CI benchmark coverage
+- [ ] Documentation/API
 
-## Rate Limiting Component
+## Success Criteria
 
-- [ ] Sliding Window Algorithm
-- [ ] False Positive Rate
-- [ ] False Negative Rate
-- [ ] Performance Optimization
-- [ ] Multi-tenant Support
-- [ ] Chaos Testing
-- [ ] Other
+How should we measure success?
 
-## Expected Impact
+## Validation Plan
 
-What impact do you expect this change to have?
+Commands and checks that should pass after implementation.
 
-## Implementation Details
+```bash
+lake exe rate_verifier
+lake exe benchmarks
+```
 
-Any technical details about the implementation.
+## Risks and Tradeoffs
 
-## Performance Considerations
-
-How might this affect performance?
-
-## Testing Strategy
-
-How should this be tested?
+Describe expected tradeoffs (complexity, performance, compatibility).
 
 ## Additional Context
 
-Add any other context about the suggestion here.
+Optional references, prior art, or data.

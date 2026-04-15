@@ -1,58 +1,51 @@
 ---
-name: Rollback Issue
-about: Report issues with version rollback or diff/patch operations
+name: Version / Rollback Issue
+about: Report an issue in diff/apply/revert behavior
 title: "[ROLLBACK] "
 labels: ["bug", "version-control"]
 assignees: ""
 ---
 
-## Issue Description
+## Summary
 
-A clear and concise description of the issue.
+Describe the incorrect rollback/version behavior.
 
-## Steps to Reproduce
+## Reproduction
 
-1. Create initial state
-2. Apply diff
-3. Revert diff
-4. See issue
+Provide minimal reproduction steps and command sequence.
+
+```bash
+lake exe version_verifier
+```
 
 ## Expected Behavior
 
-What you expected to happen (e.g., state should be identical after apply/revert).
+What state transition should have occurred?
 
 ## Actual Behavior
 
-What actually happened.
+What transition or output occurred instead?
 
-## Version Control Component
+## Affected Component
 
-- [ ] Diff Generation
-- [ ] Diff Application
-- [ ] Diff Revert
-- [ ] Invertibility Proof
-- [ ] Stress Testing
-- [ ] Performance
-- [ ] Other
+- [ ] Diff generation
+- [ ] Apply behavior
+- [ ] Revert behavior
+- [ ] Metadata handling
+- [ ] Roundtrip verification
 
-## State Information
+## Input Characteristics
 
-- Initial state size: [e.g., 1MB]
-- Diff size: [e.g., 10KB]
-- Number of cycles: [e.g., 1000]
-
-## Error Messages
-
-```
-Paste any error messages here
-```
+- State size:
+- Metadata size:
+- Number of operations:
 
 ## Environment
 
-- OS: [e.g. Ubuntu 22.04]
-- Lean Version: [e.g. 4.7.0]
-- Available memory: [e.g. 8GB]
+- OS:
+- Lean version:
+- Branch/commit:
 
 ## Additional Context
 
-Add any other context about the problem here.
+Add command output, traces, or artifacts that help diagnose.

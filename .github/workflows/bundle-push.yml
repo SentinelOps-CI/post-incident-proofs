@@ -25,31 +25,20 @@ jobs:
           tar -xzf lean-4.7.0-linux.tar.gz
           echo "$PWD/lean-4.7.0-linux/bin" >> $GITHUB_PATH
 
-      - name: Build
+      - name: Build and verify
         run: |
           lake build
-
-      - name: Run Tests
-        run: |
           lake exe tests
           lake exe security
           lake exe observability
           lake exe validate
 
-      - name: Generate Bundle
+      - name: Create release artifacts
         run: |
-          # Create logs directory if it doesn't exist
-          mkdir -p logs
-
-          # Generate sample logs for bundle
-          echo "Generating sample logs for bundle..."
-          lake exe log_verifier --generate-sample-logs logs/sample.log
-
-          # Generate bundle with 24h window
-          lake exe bundle_generator --window 24h --output post-incident-proofs-bundle.zip
-
-          # Verify bundle integrity
-          lake exe verify_bundle post-incident-proofs-bundle.zip
+          mkdir -p dist
+          tar -czf dist/post-incident-proofs-source.tar.gz src lakefile.lean lean-toolchain README.md
+          cp README.md dist/release-notes.txt
+          sha256sum dist/post-incident-proofs-source.tar.gz > dist/source.sha256
 
       - name: Create Release
         id: create_release
@@ -94,51 +83,39 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Bundle
+      - name: Upload Source Tarball
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./post-incident-proofs-bundle.zip
-          asset_name: post-incident-proofs-${{ github.ref_name || inputs.version }}.zip
-          asset_content_type: application/zip
-
-      - name: Upload Source Code
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./src/
+          asset_path: ./dist/post-incident-proofs-source.tar.gz
           asset_name: post-incident-proofs-${{ github.ref_name || inputs.version }}-source.tar.gz
           asset_content_type: application/gzip
 
-      - name: Generate Bundle Report
-        run: |
-          echo "Generating bundle report..."
-          lake exe bundle_generator --report post-incident-proofs-bundle.zip > bundle-report.txt
-
-          echo "Bundle Report:" >> bundle-report.txt
-          echo "=============" >> bundle-report.txt
-          echo "Generated: $(date)" >> bundle-report.txt
-          echo "Version: ${{ github.ref_name || inputs.version }}" >> bundle-report.txt
-          echo "Size: $(stat -c%s post-incident-proofs-bundle.zip) bytes" >> bundle-report.txt
-          echo "Hash: $(sha256sum post-incident-proofs-bundle.zip | cut -d' ' -f1)" >> bundle-report.txt
-
-      - name: Upload Bundle Report
+      - name: Upload Source Checksum
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bundle-report.txt
-          asset_name: bundle-report-${{ github.ref_name || inputs.version }}.txt
+          asset_path: ./dist/source.sha256
+          asset_name: post-incident-proofs-${{ github.ref_name || inputs.version }}-source.sha256
+          asset_content_type: text/plain
+
+      - name: Upload Release Notes
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/release-notes.txt
+          asset_name: release-notes-${{ github.ref_name || inputs.version }}.txt
           asset_content_type: text/plain
 
       - name: Notify Success
         if: success()
         run: |
-          echo "✅ Bundle push completed successfully!"
+          echo "Bundle push completed successfully."
           echo "Release: ${{ steps.create_release.outputs.upload_url }}"
-          echo "Bundle: post-incident-proofs-${{ github.ref_name || inputs.version }}.zip"
+          echo "Source: post-incident-proofs-${{ github.ref_name || inputs.version }}-source.tar.gz"
