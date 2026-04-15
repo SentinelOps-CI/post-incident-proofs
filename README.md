@@ -1,3 +1,5 @@
+<div align="center">
+  
 # Post-Incident-Proofs
 
 [![Lean](https://img.shields.io/badge/Lean-4.7.0-blue)](https://leanprover.github.io/)
@@ -5,8 +7,12 @@
 [![Security](https://img.shields.io/badge/Security-policy%20present-green)](SECURITY.md)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
+</div>
+
 Post-Incident-Proofs is a Lean 4 repository focused on verifiable post-incident evidence workflows.
 It provides executable checks for logging integrity, rate-limit behavior, version transitions, bundle validation, and operational readiness.
+
+---
 
 ## Why This Repository
 
