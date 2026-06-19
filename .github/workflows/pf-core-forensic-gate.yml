@@ -1,0 +1,99 @@
+name: PF-Core Forensic Gate
+
+on:
+  workflow_call:
+  push:
+    branches: [main, develop]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PF_CORE_TAG: pf-core-v0.6.0
+  PF_CORE_REPO: https://github.com/SentinelOps-CI/provability-fabric-core.git
+
+jobs:
+  pf-core-bundle-verify:
+    name: PF-Core artifact forensic gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout post-incident-proofs
+        uses: actions/checkout@v4
+
+      - name: Checkout provability-fabric-core (PF-Core reference)
+        run: |
+          git clone --depth 1 --branch "$PF_CORE_TAG" "$PF_CORE_REPO" pf-core-ref
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PF-Core validator
+        run: |
+          pip install -e pf-core-ref/pf-core/validator jsonschema referencing
+
+      - name: Setup Lean toolchain
+        run: |
+          wget -q https://github.com/leanprover/lean4/releases/download/v4.7.0/lean-4.7.0-linux.tar.gz
+          tar -xzf lean-4.7.0-linux.tar.gz
+          echo "$PWD/lean-4.7.0-linux/bin" >> "$GITHUB_PATH"
+
+      - name: Build verify_bundle
+        run: lake build verify_bundle
+
+      - name: Emit golden MCP sidecar bundle
+        run: |
+          VERSION="$(cat pf-core-ref/pf-core/VERSION)"
+          echo "PF_CORE_VERSION=$VERSION" >> "$GITHUB_ENV"
+          python -m pf_core.cli core emit-artifacts \
+            --schemas pf-core-ref/pf-core/schemas \
+            --file pf-core-ref/pf-core/examples/valid/mcp_sidecar_observation.json \
+            --out-dir ./release-bundle
+
+      - name: Forensic gate (verify_bundle)
+        run: |
+          lake exe verify_bundle -- --bundle-dir ./release-bundle --pf-core-version "$PF_CORE_VERSION"
+          python scripts/verify_pf_core_bundle.py \
+            --bundle-dir ./release-bundle \
+            --pf-core-version "$PF_CORE_VERSION" \
+            --schemas pf-core-ref/pf-core/schemas
+
+      - name: Release must fail on unsafe certificate
+        run: |
+          cp -r ./release-bundle ./release-bundle-unsafe
+          python - <<'PY'
+          import json
+          path = "release-bundle-unsafe/certificate.json"
+          data = json.load(open(path, encoding="utf-8"))
+          data["safe"] = False
+          json.dump(data, open(path, "w", encoding="utf-8"), indent=2, sort_keys=True)
+          PY
+          if python scripts/verify_pf_core_bundle.py \
+            --bundle-dir ./release-bundle-unsafe \
+            --pf-core-version "$PF_CORE_VERSION"; then
+            echo "expected forensic gate to reject unsafe certificate"
+            exit 1
+          fi
+
+      - name: Release must fail on tampered trace hash
+        run: |
+          cp -r ./release-bundle ./release-bundle-tampered
+          python - <<'PY'
+          import json
+          path = "release-bundle-tampered/trace.json"
+          data = json.load(open(path, encoding="utf-8"))
+          data["trace_hash"] = "f" * 64
+          json.dump(data, open(path, "w", encoding="utf-8"), indent=2, sort_keys=True)
+          PY
+          if python scripts/verify_pf_core_bundle.py \
+            --bundle-dir ./release-bundle-tampered \
+            --pf-core-version "$PF_CORE_VERSION"; then
+            echo "expected forensic gate to reject tampered trace_hash"
+            exit 1
+          fi
+
+      - name: Bundle regression script
+        run: |
+          PF_CORE_ROOT="$PWD/pf-core-ref" bash scripts/test_pf_core_bundle.sh
