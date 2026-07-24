@@ -1,0 +1,112 @@
+{
+  "claims": [
+    {
+      "assumptions": [
+        "events are totally ordered by collector clock"
+      ],
+      "checker_id": "post-incident.preservation",
+      "checker_version": "1.0.0",
+      "claim_class": "retained_event_order_preserved",
+      "claim_id": "c-order",
+      "evidence_refs": [
+        "fixtures/preservation/valid_claims.json"
+      ],
+      "inputs": {
+        "events": [
+          "e1",
+          "e2",
+          "e3",
+          "e4"
+        ]
+      },
+      "outputs": {
+        "retained_events": [
+          "e1",
+          "e3"
+        ]
+      },
+      "schema_version": "pip.PreservationClaim.v1"
+    },
+    {
+      "assumptions": [
+        "refs are opaque identifiers"
+      ],
+      "checker_id": "post-incident.preservation",
+      "checker_version": "1.0.0",
+      "claim_class": "authorization_chain_preserved",
+      "claim_id": "c-auth",
+      "evidence_refs": [
+        "fixtures/preservation/valid_claims.json"
+      ],
+      "inputs": {
+        "authorization_refs": [
+          "auth/a",
+          "auth/b"
+        ]
+      },
+      "outputs": {
+        "authorization_refs": [
+          "auth/a"
+        ]
+      },
+      "schema_version": "pip.PreservationClaim.v1"
+    },
+    {
+      "assumptions": [
+        "projection keys are declared relevant"
+      ],
+      "checker_id": "post-incident.preservation",
+      "checker_version": "1.0.0",
+      "claim_class": "relevant_state_projection_equivalent",
+      "claim_id": "c-proj",
+      "evidence_refs": [
+        "fixtures/preservation/valid_claims.json"
+      ],
+      "inputs": {
+        "projection": {
+          "status": "failed"
+        }
+      },
+      "outputs": {
+        "projection": {
+          "status": "failed"
+        }
+      },
+      "schema_version": "pip.PreservationClaim.v1"
+    },
+    {
+      "assumptions": [
+        "predicate selection external"
+      ],
+      "checker_id": "post-incident.preservation",
+      "checker_version": "1.0.0",
+      "claim_class": "selected_failure_predicate_preserved",
+      "claim_id": "c-pred",
+      "evidence_refs": [
+        "fixtures/preservation/valid_claims.json"
+      ],
+      "inputs": {
+        "binding": {
+          "outcome": "denied"
+        },
+        "events": [
+          "e1"
+        ]
+      },
+      "outputs": {
+        "binding": {
+          "outcome": "denied"
+        },
+        "events": [
+          "e1"
+        ]
+      },
+      "predicate_ast": {
+        "kind": "equals",
+        "left_key": "outcome",
+        "right": "denied"
+      },
+      "schema_version": "pip.PreservationClaim.v1"
+    }
+  ]
+}

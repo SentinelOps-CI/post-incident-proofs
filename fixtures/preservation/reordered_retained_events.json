@@ -1,0 +1,25 @@
+{
+  "assumptions": [],
+  "checker_id": "post-incident.preservation",
+  "checker_version": "1.0.0",
+  "claim_class": "retained_event_order_preserved",
+  "claim_id": "c-order-bad",
+  "evidence_refs": [
+    "fixture"
+  ],
+  "inputs": {
+    "events": [
+      "e1",
+      "e2",
+      "e3",
+      "e4"
+    ]
+  },
+  "outputs": {
+    "retained_events": [
+      "e3",
+      "e1"
+    ]
+  },
+  "schema_version": "pip.PreservationClaim.v1"
+}

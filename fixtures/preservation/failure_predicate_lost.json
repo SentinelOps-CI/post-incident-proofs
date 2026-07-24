@@ -1,0 +1,28 @@
+{
+  "assumptions": [],
+  "checker_id": "post-incident.preservation",
+  "checker_version": "1.0.0",
+  "claim_class": "selected_failure_predicate_preserved",
+  "claim_id": "c-pred-bad",
+  "evidence_refs": [
+    "fixture"
+  ],
+  "inputs": {
+    "binding": {
+      "outcome": "denied"
+    },
+    "events": []
+  },
+  "outputs": {
+    "binding": {
+      "outcome": "allowed"
+    },
+    "events": []
+  },
+  "predicate_ast": {
+    "kind": "equals",
+    "left_key": "outcome",
+    "right": "denied"
+  },
+  "schema_version": "pip.PreservationClaim.v1"
+}
