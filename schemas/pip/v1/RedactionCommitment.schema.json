@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://post-incident-proofs.local/schemas/pip/v1/RedactionCommitment.schema.json",
+  "title": "RedactionCommitment",
+  "description": "Public↔protected digest relation. Fixtures must never include redacted plaintext.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "commitment_id",
+    "original_digest",
+    "redacted_digest",
+    "redaction_manifest_digest",
+    "mapping_commitment",
+    "redaction_service_id",
+    "verification_result",
+    "protected_location_class",
+    "public_disclosure_class"
+  ],
+  "properties": {
+    "schema_version": { "const": "pip.RedactionCommitment.v1" },
+    "commitment_id": { "type": "string", "minLength": 1 },
+    "original_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "redacted_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "redaction_manifest_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "mapping_commitment": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "redaction_service_id": { "type": "string", "minLength": 1 },
+    "verification_result": {
+      "type": "string",
+      "enum": ["pass", "fail", "indeterminate"]
+    },
+    "protected_location_class": {
+      "type": "string",
+      "enum": ["protected_store", "airgapped", "partner_vault", "unavailable"]
+    },
+    "public_disclosure_class": {
+      "type": "string",
+      "enum": ["public_digests_only", "public_manifest_digests", "internal"]
+    }
+  }
+}
