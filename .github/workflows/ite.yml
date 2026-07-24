@@ -1,0 +1,56 @@
+name: ITE
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  ite:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python package
+        run: pip install -e "./python[dev]"
+
+      - name: ADR presence lint
+        run: python scripts/lint_adr_presence.py
+
+      - name: PCS pin digest gate
+        run: python scripts/verify_pcs_pin.py
+
+      - name: Install elan / Lean toolchain
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Lake build (includes ITE Lean modules)
+        run: lake build
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Rust fmt/clippy/test
+        run: |
+          cargo fmt --manifest-path rust/post-incident-kernel/Cargo.toml --check
+          cargo clippy --manifest-path rust/post-incident-kernel/Cargo.toml -- -D warnings
+          cargo test --manifest-path rust/post-incident-kernel/Cargo.toml
+
+      - name: Ruff + mypy
+        run: |
+          ruff check python/post_incident python/tests
+          mypy python/post_incident
+
+      - name: Pytest ITE suite
+        run: pytest python/tests -q
+
+      - name: No Lean sorry in ITE modules
+        run: python scripts/lint_no_sorry.py
