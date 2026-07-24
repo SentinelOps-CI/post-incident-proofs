@@ -1,0 +1,82 @@
+{
+  "schema_version": "pip.ConformanceVectors.v1",
+  "vectors": [
+    {
+      "decider": "retained_event_order_preserved",
+      "expected": true,
+      "full": [
+        "e1",
+        "e2",
+        "e3",
+        "e4"
+      ],
+      "id": "order_ok",
+      "retained": [
+        "e1",
+        "e3"
+      ]
+    },
+    {
+      "decider": "retained_event_order_preserved",
+      "expected": false,
+      "full": [
+        "e1",
+        "e2",
+        "e3",
+        "e4"
+      ],
+      "id": "order_bad",
+      "retained": [
+        "e3",
+        "e1"
+      ]
+    },
+    {
+      "decider": "relevant_state_projection_equivalent",
+      "expected": true,
+      "id": "proj_ok",
+      "left": [
+        [
+          "k",
+          "v"
+        ]
+      ],
+      "right": [
+        [
+          "k",
+          "v"
+        ]
+      ]
+    },
+    {
+      "decider": "transformation_graph_acyclic",
+      "edges": [
+        [
+          "a",
+          "b"
+        ],
+        [
+          "b",
+          "c"
+        ]
+      ],
+      "expected": true,
+      "id": "dag_ok"
+    },
+    {
+      "decider": "transformation_graph_acyclic",
+      "edges": [
+        [
+          "a",
+          "b"
+        ],
+        [
+          "b",
+          "a"
+        ]
+      ],
+      "expected": false,
+      "id": "dag_bad"
+    }
+  ]
+}
