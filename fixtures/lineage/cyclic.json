@@ -1,0 +1,59 @@
+{
+  "bundle_id": "lin-cyclic",
+  "edges": [
+    {
+      "from_node_id": "a",
+      "to_node_id": "b",
+      "transformation_id": "t-ab"
+    },
+    {
+      "from_node_id": "b",
+      "to_node_id": "a",
+      "transformation_id": "t-ba"
+    }
+  ],
+  "incident_id": "inc-001",
+  "nodes": [
+    {
+      "artifact_digest": "sha256:b7380e63c88f58cf9a44431d7c4e204784c71f456b7ae53483473aa2ede672b9",
+      "node_id": "a",
+      "role": "source"
+    },
+    {
+      "artifact_digest": "sha256:5da3fc6cb8ca08147f76322fc9a26923e3ad365e10f2fc2d511c735d94a5c710",
+      "node_id": "b",
+      "role": "intermediate"
+    }
+  ],
+  "schema_version": "pip.LineageBundle.v1",
+  "transformations": [
+    {
+      "container_digest": "sha256:ecbc6b1b1d4d1e478f58d2735457b13cdff64452729f0aed7752b03322952243",
+      "implementation_id": "pip-ite-normalizer",
+      "implementation_version": "1.0.0",
+      "input_artifact_digests": [
+        "sha256:b7380e63c88f58cf9a44431d7c4e204784c71f456b7ae53483473aa2ede672b9"
+      ],
+      "output_artifact_digest": "sha256:5da3fc6cb8ca08147f76322fc9a26923e3ad365e10f2fc2d511c735d94a5c710",
+      "record_digest": "sha256:d3f0c8a67c303d412794d255693d8f989e8374bb821c35e6a30e7933d592d317",
+      "schema_version": "pip.TransformationRecord.v1",
+      "source_commit": "3cdfdf09c20f08ad5221d29607b5a9726295ad10",
+      "transformation_id": "t-ab",
+      "transformation_type": "normalization"
+    },
+    {
+      "container_digest": "sha256:ecbc6b1b1d4d1e478f58d2735457b13cdff64452729f0aed7752b03322952243",
+      "implementation_id": "pip-ite-normalizer",
+      "implementation_version": "1.0.0",
+      "input_artifact_digests": [
+        "sha256:5da3fc6cb8ca08147f76322fc9a26923e3ad365e10f2fc2d511c735d94a5c710"
+      ],
+      "output_artifact_digest": "sha256:b7380e63c88f58cf9a44431d7c4e204784c71f456b7ae53483473aa2ede672b9",
+      "record_digest": "sha256:cf4f676a6b8fe94364f7e57775c8cee58fa5249ff06dc6848ec019a124b06d4f",
+      "schema_version": "pip.TransformationRecord.v1",
+      "source_commit": "3cdfdf09c20f08ad5221d29607b5a9726295ad10",
+      "transformation_id": "t-ba",
+      "transformation_type": "normalization"
+    }
+  ]
+}
