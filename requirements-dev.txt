@@ -1,5 +1,5 @@
 PyYAML==6.0.2
-jsonschema>=4.22
+jsonschema>=4.26.0
 referencing>=0.35
 pytest>=8.2
 ruff>=0.5
