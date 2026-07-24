@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://post-incident-proofs.local/schemas/pip/v1/TransformationRecord.schema.json",
+  "title": "TransformationRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "transformation_id",
+    "transformation_type",
+    "input_artifact_digests",
+    "output_artifact_digest",
+    "implementation_id",
+    "implementation_version",
+    "container_digest",
+    "source_commit",
+    "record_digest"
+  ],
+  "properties": {
+    "schema_version": { "const": "pip.TransformationRecord.v1" },
+    "transformation_id": { "type": "string", "minLength": 1 },
+    "transformation_type": {
+      "type": "string",
+      "enum": [
+        "redaction",
+        "normalization",
+        "event_filtering",
+        "state_projection",
+        "trace_minimization",
+        "dependency_substitution",
+        "timestamp_normalization",
+        "environment_conversion",
+        "synthetic_variant_derivation"
+      ]
+    },
+    "input_artifact_digests": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+    },
+    "output_artifact_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "implementation_id": { "type": "string", "minLength": 1 },
+    "implementation_version": { "type": "string", "minLength": 1 },
+    "container_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "source_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "record_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "Content digest of this record excluding record_digest itself; used for append-only immutability."
+    },
+    "notes": { "type": "string" }
+  }
+}
