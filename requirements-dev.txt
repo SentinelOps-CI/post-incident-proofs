@@ -1,6 +1,6 @@
 PyYAML==6.0.2
 jsonschema>=4.22
-referencing>=0.35
+referencing>=0.37.0
 pytest>=8.2
 ruff>=0.5
 mypy>=1.10
