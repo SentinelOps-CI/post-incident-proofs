@@ -51,35 +51,25 @@ jobs:
           body: |
             ## Post-Incident-Proofs Release ${{ github.ref_name || inputs.version }}
 
-            ### What's New
-            - Machine-checked forensic evidence system
-            - Tamper-evident logging with HMAC signatures
-            - Rate limiting with formal correctness proofs
-            - Version control with proven invertibility
-            - Auto-generated Grafana dashboards
-            - Incident bundle generation with cryptographic verification
+            ### What's included
+            - Offline ITE tooling: `post-incident` CLI, Rust digest/DAG kernel, Lean soundness modules
+            - PIP domain schemas + vendored PCS integrity pin
+            - Legacy Lean executable gates (logging / rate / version / ops) as frozen baseline
+            - Source tarball + SHA-256 checksum
 
-            ### Bundle Contents
-            - Log chain with cryptographic integrity
-            - Lean specifications and formal proofs
-            - HTML timeline with embedded hashes
-            - SentinelOps-compatible audit report
+            ### Claim boundary
+            Structural integrity checks only. Does not claim causation, remediation effectiveness,
+            partner-secret contents, live SDE/Morph operation, or production crypto signing services.
+            See `docs/adr/PIP-ITE-00-claim-boundary.md` and `docs/adr/ADR-0001-crypto-and-assurance-boundary.md`.
 
             ### Verification
             ```bash
-            # Verify bundle integrity
-            lake exe verify_bundle post-incident-proofs-bundle.zip
-
-            # Check SentinelOps compliance
-            lake exe verify_bundle --sentinelops post-incident-proofs-bundle.zip
+            pip install -e "./python[dev]"
+            post-incident bundle validate fixtures/release/valid_incident_release
+            make ite
+            # Legacy gates (not lineage evidence):
+            make ci
             ```
-
-            ### Performance Targets Met
-            - ✅ Log throughput: ≥ 200k entries/s
-            - ✅ Rate limiting: ≥ 30k rps with ≤ 0.1% false positives
-            - ✅ Tamper detection: < 200ms
-            - ✅ Bundle size: < 5MB for 24h window
-            - ✅ Version control: 10k cycle stress testing
           draft: false
           prerelease: false
 

@@ -1,0 +1,22 @@
+{
+  "assumptions": [],
+  "checker_id": "post-incident.preservation",
+  "checker_version": "1.0.0",
+  "claim_class": "authorization_chain_preserved",
+  "claim_id": "c-auth-bad",
+  "evidence_refs": [
+    "fixture"
+  ],
+  "inputs": {
+    "authorization_refs": [
+      "auth/a"
+    ]
+  },
+  "outputs": {
+    "authorization_refs": [
+      "auth/a",
+      "auth/missing"
+    ]
+  },
+  "schema_version": "pip.PreservationClaim.v1"
+}

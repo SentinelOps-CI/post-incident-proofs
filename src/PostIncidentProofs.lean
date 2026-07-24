@@ -10,6 +10,10 @@ import PostIncidentProofs.Security.ThreatModel
 import PostIncidentProofs.Benchmark.Performance
 import PostIncidentProofs.Chaos.Engine
 import PostIncidentProofs.Observability.Metrics
+import PostIncidentProofs.Lineage.Graph
+import PostIncidentProofs.Preservation.Order
+import PostIncidentProofs.Preservation.Projection
+import PostIncidentProofs.Preservation.Deciders
 
 namespace PostIncidentProofs
 

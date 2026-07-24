@@ -1,0 +1,16 @@
+{
+  "branch_id": "branch-fixture",
+  "input_artifact_digests": [
+    "sha256:9424f7213144defa97fd07a784f501b8ed7ff90a41803e83e38224922325bafb"
+  ],
+  "lineage_node_ids": [
+    "n2"
+  ],
+  "output_artifact_digests": [
+    "sha256:bcd2cfd40445fb3ad7654f7b77a4443e23d709ebcf5579e5e13e70ee79cc0d8a"
+  ],
+  "replay_id": "morph-replay-001",
+  "replay_identity_digest": "sha256:bcd2cfd40445fb3ad7654f7b77a4443e23d709ebcf5579e5e13e70ee79cc0d8a",
+  "schema_version": "pip.MorphReplayReport.v1",
+  "status": "recorded"
+}

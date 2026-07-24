@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://post-incident-proofs.local/schemas/pip/v1/IncidentRelease.schema.json",
+  "title": "IncidentRelease",
+  "description": "Manifest for an offline incident_release/ bundle.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "release_id",
+    "incident_id",
+    "source_record",
+    "lineage_bundle",
+    "preservation_claims",
+    "redaction_commitments",
+    "public_artifact_digests",
+    "checksums_manifest",
+    "non_claims_path"
+  ],
+  "properties": {
+    "schema_version": { "const": "pip.IncidentRelease.v1" },
+    "release_id": { "type": "string", "minLength": 1 },
+    "incident_id": { "type": "string", "minLength": 1 },
+    "source_record": { "type": "string", "minLength": 1 },
+    "lineage_bundle": { "type": "string", "minLength": 1 },
+    "preservation_claims": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "redaction_commitments": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "public_artifact_digests": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^sha256:[a-f0-9]{64}$"
+      }
+    },
+    "checksums_manifest": { "type": "string", "minLength": 1 },
+    "non_claims_path": { "type": "string", "const": "NON_CLAIMS.md" },
+    "morph_replay_report": { "type": "string", "minLength": 1 }
+  }
+}

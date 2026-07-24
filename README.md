@@ -1,5 +1,5 @@
 <div align="center">
-  
+
 <pre>
 ###############################################################################################
 #                                                                                             #
@@ -20,92 +20,118 @@
 
 </div>
 
-Post-Incident-Proofs is a Lean 4 repository focused on verifiable post-incident evidence workflows.
-It provides executable checks for logging integrity, rate-limit behavior, version transitions, bundle validation, and operational readiness.
+**Post-Incident-Proofs (PIP)** is an offline incident-lineage and preservation-verification toolkit (ITE: Incident Trace Evidence), plus a frozen Lean executable baseline for operational gates.
+
+The public product surface is the `post-incident` CLI (Python), backed by a Rust digest/DAG kernel and Lean soundness modules. Digests used for ITE are real SHA-256 in Rust/Python. Lean `Utils.Crypto` remains a deterministic stub for legacy gates only — not a cryptographic oracle (see [ADR-0001](docs/adr/ADR-0001-crypto-and-assurance-boundary.md) and [PIP-ITE-00](docs/adr/PIP-ITE-00-claim-boundary.md)).
 
 ---
 
-## Why This Repository
+## What ITE claims (and does not)
 
-Incident workflows are often hard to trust when verification is manual or inconsistent.
-This project makes verification explicit and repeatable through Lean modules plus executable gates that run both locally and in CI.
+| Claims | Non-claims |
+| --- | --- |
+| Source / lineage / declared preservation / redaction-link / Morph replay-link structural checks | Causation, blame, remediation effectiveness |
+| Fail-closed schema + digest verification on declared material | Live SDE / Morph Cloud operation |
+| Lean soundness for selected normalized predicates | “Full capture” when completeness is incomplete/silent |
+| | Partner secrets or protected plaintext in public fixtures |
 
-## Current Capability Snapshot
+Full boundary: [`docs/adr/PIP-ITE-00-claim-boundary.md`](docs/adr/PIP-ITE-00-claim-boundary.md).
+
+---
+
+## Capability snapshot
 
 | Area | What exists today | How to validate |
 | --- | --- | --- |
-| Build integrity | Lean package and library compile | `lake build` |
-| Logging checks | Log verifier and integrity checks | `lake exe log_verifier` |
-| Rate checks | Rate model verifier | `lake exe rate_verifier` |
-| Version checks | Version roundtrip verifier | `lake exe version_verifier` |
-| Bundle checks | Bundle validation command | `lake exe verify_bundle <path>` |
-| Ops checks | Security, observability, full validation executables | `lake exe security`, `lake exe observability`, `lake exe validate` |
-| Delivery quality | CI gates, hygiene checks, release artifacts | `.github/workflows/` |
+| Incident source | Schema + integrity envelope refs | `post-incident source validate` |
+| Lineage DAG | Acyclic graph, pinned refs, digest checks | `post-incident lineage validate` |
+| Preservation | Deterministic declared claim deciders | `post-incident preservation verify` |
+| Redaction | Public↔protected digest commitments | `post-incident redaction verify` |
+| Morph replay | Fixture linkage to lineage digests | `post-incident replay-check` |
+| Release bundle | Offline `incident_release/` validation | `post-incident bundle validate` |
+| Polyglot CI | Lint + Lean + Rust + pytest | `make ite` |
+| Legacy Lean gates | Logging / rate / version / ops executables | `make ci` (not lineage evidence) |
 
-## Quick Start
+---
+
+## Quick start (ITE)
+
+```bash
+pip install -e "./python[dev]"
+post-incident source validate fixtures/source/valid_complete.json
+post-incident lineage validate fixtures/lineage/valid_dag.json
+post-incident preservation verify fixtures/preservation/valid_claims.json
+post-incident redaction verify fixtures/redaction/valid_commitment.json
+post-incident bundle validate fixtures/release/valid_incident_release
+make ite
+```
+
+Optional Rust kernel (reconstruction / digest helpers):
+
+```bash
+cargo build --manifest-path rust/post-incident-kernel/Cargo.toml --release
+```
+
+Reconstruction guide: [`docs/RECONSTRUCTION.md`](docs/RECONSTRUCTION.md).
+
+---
+
+## Legacy Lean executables (frozen baseline)
+
+These gates remain supported for the historical Lean package. They are **not** incident-lineage or preservation evidence.
 
 ```bash
 lake build
 lake exe tests
-lake exe security
-lake exe observability
-lake exe validate
-```
-
-## Command Reference
-
-### Lake executables
-
-```bash
-lake exe verify_bundle <path>
 lake exe log_verifier
 lake exe rate_verifier
 lake exe version_verifier
-lake exe tests
-lake exe benchmarks
+lake exe verify_bundle <path>
 lake exe security
 lake exe observability
 lake exe validate
+lake exe benchmarks
 ```
 
-### Make targets
+Make aliases: `make build`, `make test`, `make security`, `make observability`, `make validate`, `make benchmark`, `make ci`, `make release`.
 
-```bash
-make build
-make test
-make security
-make observability
-make validate
-make benchmark
-make ci
-make release
-```
+Baseline freeze: [`docs/baseline/PIP-ITE-00.md`](docs/baseline/PIP-ITE-00.md).
 
-## Environment and Secrets
+---
 
-1. Copy `.env.example` to `.env`.
-2. Set strong values for:
-   - `GF_SECURITY_ADMIN_USER`
-   - `GF_SECURITY_ADMIN_PASSWORD`
-   - `APP_HMAC_KEY`
-3. Never commit `.env` files or private key material.
-4. Optional helper for local generation: `python scripts/generate_secrets.py`.
+## Environment and secrets
 
-## Quality and Release Pipeline
+1. Copy `.env.example` to `.env` only if you run the optional compose stack.
+2. Set strong values for `GF_SECURITY_ADMIN_USER`, `GF_SECURITY_ADMIN_PASSWORD`, and `APP_HMAC_KEY`.
+3. Never commit `.env`, private keys, or partner plaintext.
+4. Optional local helper: `python scripts/generate_secrets.py` (writes outside the tracked tree).
 
-- CI includes verification, benchmark, dependency review, policy lint, and repository hygiene workflows.
-- Release automation publishes:
-  - source tarball
-  - source checksum
-  - release notes
-- Scheduled SLO checks run through `slo-gate`.
+### Optional Docker compose
 
-## Documentation Map
+`docker-compose.yml` is an **optional observability scaffold** for Grafana/Prometheus/Loki. It mounts provisioning paths (`dashboards/`, `datasources/`, `prometheus.yml`, `alerts.yml`) that are **not shipped** in this repository. Do not treat compose as part of ITE verification; use it only after supplying your own provisioning files locally.
 
-- API surface: `docs/API.md`
-- Security policy: `SECURITY.md`
-- Assurance mapping: `docs/ASSURANCE_MATRIX.md`
-- SLOs: `docs/SLOS.md`
-- Definition of done: `docs/DEFINITION_OF_DONE.md`
-- Contributing guide: `CONTRIBUTING.md`
-- Architecture decisions: `docs/adr/`
+---
+
+## Quality and release pipeline
+
+- Legacy Lean CI: `.github/workflows/ci.yml`, hygiene, policy lint, SLO gate.
+- ITE CI: `.github/workflows/ite.yml` (`make ite` equivalent).
+- Release automation publishes a source tarball + checksum. Release notes must stay within ADR claim boundaries (no fake crypto/performance guarantees).
+
+---
+
+## Documentation map
+
+| Doc | Purpose |
+| --- | --- |
+| [`docs/API.md`](docs/API.md) | `post-incident` CLI + legacy Lake surface |
+| [`SECURITY.md`](SECURITY.md) | Private disclosure + controls |
+| [`docs/ASSURANCE_MATRIX.md`](docs/ASSURANCE_MATRIX.md) | Claim → command → CI mapping |
+| [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md) | ITE threat model |
+| [`docs/RECONSTRUCTION.md`](docs/RECONSTRUCTION.md) | Offline rebuild / verify |
+| [`docs/REVIEWER_CHECKLIST_ITE.md`](docs/REVIEWER_CHECKLIST_ITE.md) | PR checklist |
+| [`CHANGELOG.md`](CHANGELOG.md) | Version history |
+| [`docs/SLOS.md`](docs/SLOS.md) | Build / verify objectives |
+| [`docs/DEFINITION_OF_DONE.md`](docs/DEFINITION_OF_DONE.md) | Done criteria |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Local workflow |
+| [`docs/adr/`](docs/adr/) | ADR-0001 + PIP-ITE-00..07 |

@@ -1,0 +1,19 @@
+{
+  "mirror_name": "pcs-core",
+  "source_repo": "https://github.com/SentinelOps-CI/pcs-core",
+  "source_tag_hint": "v0.1.0+",
+  "pinned_commit": "e068794683959c52a19594a6d271dd5e69f3c999",
+  "pin_rationale": "v0.1.0 lacks ArtifactIntegrity.v1; pin includes ArtifactIntegrity.v1.schema.json and common.defs.json required for integrity envelopes.",
+  "vendored_files": [
+    "ArtifactIntegrity.v1.schema.json",
+    "common.defs.json"
+  ],
+  "local_digests": {
+    "ArtifactIntegrity.v1.schema.json": "sha256:cf2da00c78df4c023d2d1cb940f34714a1c3d39a2428be172e223b4f98f4f827",
+    "common.defs.json": "sha256:5eed8484e3a63680e04c2d4dbc4683f59c53aab3432db23cedce199ae0fbb658"
+  },
+  "sync_policy": "Fail CI if local file digests drift from local_digests in this manifest. Do not edit vendored schemas in-place; bump pin, re-vendor, and refresh local_digests.",
+  "non_claims": [
+    "Vendoring schemas does not imply live PCS/Morph/PF-Core/OVK runtime integration in default CI."
+  ]
+}

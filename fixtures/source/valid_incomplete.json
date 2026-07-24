@@ -1,0 +1,35 @@
+{
+  "authorization_version": "authz-1.0.0",
+  "collection_time": "2026-07-01T12:05:00Z",
+  "collector_id": "collector-fixture",
+  "completeness": "incomplete",
+  "confidentiality_class": "public",
+  "environment_id": "env-fixture-1",
+  "final_state_commitment": "sha256:3180f5aec8dc8553b5372e1dff482f3fdadc31b1664b2cf19838e2f6e9f5deb4",
+  "harness_version": "harness-1.0.0",
+  "incident_id": "inc-001",
+  "initial_state_commitment": "sha256:0eb3f8b484a20f31411ce834bd9e876160a935c71bc8641c853dd333082e0f5f",
+  "integrity_envelope": {
+    "artifact_digest": "sha256:961828b5dc6896a44c84bcd6f38616232fcf974077134ad43e8049027a7c9b50",
+    "artifact_type": "pip.IncidentSourceRecord",
+    "canonicalization_version": "v1",
+    "schema_version": "v1",
+    "signature": {
+      "algorithm": "ed25519",
+      "key_id": "pip-ite-fixture-key",
+      "signed_at": "2026-07-01T12:00:00Z",
+      "value": "dGVzdC1zaWduYXR1cmUtbm90LXNlY3JldA"
+    }
+  },
+  "known_missing_evidence": [
+    "authz-sidecar-logs"
+  ],
+  "model_version": "model-1.0.0",
+  "observed_outcome": "policy_denied",
+  "policy_version": "policy-1.0.0",
+  "redaction_status": "none",
+  "schema_version": "pip.IncidentSourceRecord.v1",
+  "source_system_id": "synth-orchestrator",
+  "source_trace_digest": "sha256:961828b5dc6896a44c84bcd6f38616232fcf974077134ad43e8049027a7c9b50",
+  "tool_version": "tool-1.0.0"
+}

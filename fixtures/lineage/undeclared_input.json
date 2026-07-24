@@ -1,0 +1,45 @@
+{
+  "bundle_id": "lin-undeclared",
+  "edges": [
+    {
+      "from_node_id": "ghost",
+      "to_node_id": "n1",
+      "transformation_id": "t-norm"
+    }
+  ],
+  "incident_id": "inc-001",
+  "nodes": [
+    {
+      "artifact_digest": "sha256:953d9b5f7e7fadeb19fa16498348760a91da12591aff91905a513a46bd919f59",
+      "node_id": "n0",
+      "role": "source"
+    },
+    {
+      "artifact_digest": "sha256:d4c80c93d33abcfec64ce21c0d37114b592015383d7ccc7d40df890cf5677e6c",
+      "node_id": "ghost",
+      "role": "source"
+    },
+    {
+      "artifact_digest": "sha256:9424f7213144defa97fd07a784f501b8ed7ff90a41803e83e38224922325bafb",
+      "node_id": "n1",
+      "role": "intermediate"
+    }
+  ],
+  "schema_version": "pip.LineageBundle.v1",
+  "transformations": [
+    {
+      "container_digest": "sha256:ecbc6b1b1d4d1e478f58d2735457b13cdff64452729f0aed7752b03322952243",
+      "implementation_id": "pip-ite-normalizer",
+      "implementation_version": "1.0.0",
+      "input_artifact_digests": [
+        "sha256:953d9b5f7e7fadeb19fa16498348760a91da12591aff91905a513a46bd919f59"
+      ],
+      "output_artifact_digest": "sha256:9424f7213144defa97fd07a784f501b8ed7ff90a41803e83e38224922325bafb",
+      "record_digest": "sha256:da36c46aa2947fcd01adec37dd9f580a80f28a3b41ff2559e6855bca18704c78",
+      "schema_version": "pip.TransformationRecord.v1",
+      "source_commit": "3cdfdf09c20f08ad5221d29607b5a9726295ad10",
+      "transformation_id": "t-norm",
+      "transformation_type": "normalization"
+    }
+  ]
+}

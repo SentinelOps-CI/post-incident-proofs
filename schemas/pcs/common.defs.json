@@ -1,0 +1,821 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pcs.sentinelops.ci/schemas/common.defs.json",
+  "title": "PCS Common Definitions",
+  "$defs": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^v0$"
+    },
+    "iso8601_datetime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "hex_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "relative_posix_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "description": "Relative POSIX path: no absolute roots, drive letters, UNC, empty segments, or parent (..) traversal.",
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!\\\\\\\\)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    },
+    "canonicalization_version": {
+      "type": "string",
+      "const": "v1",
+      "description": "PCS Canonical JSON algorithm version used for artifact_digest / signature_or_digest."
+    },
+    "schema_version_v1": {
+      "type": "string",
+      "pattern": "^v1$"
+    },
+    "ed25519_signature_envelope": {
+      "type": "object",
+      "required": [
+        "algorithm",
+        "key_id",
+        "signed_at",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "ed25519"
+        },
+        "key_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "signed_at": {
+          "$ref": "#/$defs/iso8601_datetime"
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Base64url or hex encoding of the ed25519 signature over the domain-separated message."
+        }
+      }
+    },
+    "uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "duration": {
+      "type": "string",
+      "format": "duration"
+    },
+    "hostname": {
+      "type": "string",
+      "format": "hostname"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "kernel_file_entry": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relative_posix_path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/hex_digest"
+        }
+      }
+    },
+    "artifact_status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Extracted",
+        "HumanReviewed",
+        "Formalized",
+        "ProofPending",
+        "ProofChecked",
+        "CertificatePending",
+        "CertificateChecked",
+        "RuntimeObserved",
+        "RuntimeChecked",
+        "Rejected",
+        "EmpiricalOnly",
+        "Deprecated",
+        "Stale"
+      ]
+    },
+    "trace_certificate_status": {
+      "type": "string",
+      "enum": [
+        "CertificatePending",
+        "CertificateChecked",
+        "Rejected",
+        "Stale"
+      ]
+    },
+    "producer_metadata": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "created_at",
+        "producer",
+        "producer_version",
+        "source_repo",
+        "source_commit",
+        "status",
+        "signature_or_digest"
+      ],
+      "properties": {
+        "schema_version": {
+          "$ref": "#/$defs/schema_version"
+        },
+        "created_at": {
+          "$ref": "#/$defs/iso8601_datetime"
+        },
+        "producer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "producer_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_repo": {
+          "type": "string",
+          "format": "uri"
+        },
+        "source_commit": {
+          "type": "string",
+          "minLength": 7
+        },
+        "status": {
+          "$ref": "#/$defs/artifact_status"
+        },
+        "signature_or_digest": {
+          "$ref": "#/$defs/hex_digest"
+        }
+      }
+    },
+    "hash_map": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/hex_digest"
+      }
+    },
+    "ref_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "git_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "release_status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Validated",
+        "Rejected",
+        "Stale",
+        "Deprecated"
+      ]
+    },
+    "handoff_kind": {
+      "type": "string",
+      "enum": [
+        "runtime_to_certificate",
+        "certificate_to_bundle",
+        "bundle_to_verifier",
+        "signed_bundle_to_memory",
+        "release_chain"
+      ]
+    },
+    "handoff_status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Validated",
+        "Rejected",
+        "Stale",
+        "Deprecated"
+      ]
+    },
+    "release_chain_validation_status": {
+      "type": "string",
+      "enum": [
+        "ProofChecked",
+        "Rejected",
+        "Stale"
+      ]
+    },
+    "validation_check_status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed",
+        "warning",
+        "skipped"
+      ]
+    },
+    "registry_check_coverage_status": {
+      "type": "string",
+      "enum": [
+        "deferred",
+        "skipped"
+      ]
+    },
+    "enforcement_location": {
+      "type": "string",
+      "enum": [
+        "artifact_validate",
+        "release_chain",
+        "consumer",
+        "registry_metadata"
+      ]
+    },
+    "deferred_registry_check": {
+      "type": "object",
+      "required": [
+        "registry_ref",
+        "status",
+        "enforcement_location",
+        "responsible_component",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "registry_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/registry_check_coverage_status"
+        },
+        "enforcement_location": {
+          "$ref": "#/$defs/enforcement_location"
+        },
+        "responsible_component": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "producer_repo_pin": {
+      "type": "object",
+      "required": [
+        "repo",
+        "commit"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "repo": {
+          "type": "string",
+          "format": "uri"
+        },
+        "commit": {
+          "$ref": "#/$defs/git_commit"
+        },
+        "local_dev": {
+          "type": "boolean"
+        }
+      }
+    },
+    "manifest_artifact_entry": {
+      "type": "object",
+      "required": [
+        "artifact_type",
+        "schema",
+        "producer",
+        "source_repo",
+        "source_commit",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "producer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_repo": {
+          "type": "string",
+          "format": "uri"
+        },
+        "source_commit": {
+          "$ref": "#/$defs/git_commit"
+        },
+        "sha256": {
+          "$ref": "#/$defs/hex_digest"
+        },
+        "local_dev": {
+          "type": "boolean"
+        }
+      }
+    },
+    "handoff_artifact_ref": {
+      "type": "object",
+      "required": [
+        "artifact_type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/hex_digest"
+        }
+      }
+    },
+    "semantic_check_severity": {
+      "type": "string",
+      "enum": [
+        "required",
+        "optional",
+        "warning_only",
+        "release_blocking",
+        "producer_responsible",
+        "consumer_responsible",
+        "validator_responsible"
+      ]
+    },
+    "registry_semantic_check": {
+      "type": "object",
+      "required": [
+        "check_id",
+        "severity",
+        "responsible_component",
+        "execution_required_in_release_mode",
+        "allowed_to_skip"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "$ref": "#/$defs/semantic_check_severity"
+        },
+        "responsible_component": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution_required_in_release_mode": {
+          "type": "boolean"
+        },
+        "allowed_to_skip": {
+          "type": "boolean"
+        }
+      }
+    },
+    "release_validation_check": {
+      "type": "object",
+      "required": [
+        "check_id",
+        "description",
+        "status",
+        "details",
+        "registry_check_refs",
+        "responsible_component"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/validation_check_status"
+        },
+        "details": {
+          "type": "object"
+        },
+        "registry_check_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "responsible_component": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "chain_root": {
+      "type": "object",
+      "required": [
+        "trace_hash",
+        "certificate_id",
+        "certified_bundle_hash",
+        "signed_bundle_hash"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "trace_hash": {
+          "$ref": "#/$defs/hex_digest"
+        },
+        "certificate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "certified_bundle_hash": {
+          "$ref": "#/$defs/hex_digest"
+        },
+        "signed_bundle_hash": {
+          "$ref": "#/$defs/hex_digest"
+        }
+      }
+    },
+    "manifest_path_ref": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/hex_digest"
+        }
+      }
+    },
+    "limitations_notice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "formal_check": {
+      "type": "object",
+      "required": [
+        "check_id",
+        "status",
+        "artifact"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/validation_check_status"
+        },
+        "artifact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lean_theorem": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "benchmark_case_kind": {
+      "type": "string",
+      "enum": [
+        "valid_release",
+        "invalid_hash_mismatch",
+        "invalid_certificate",
+        "invalid_handoff",
+        "invalid_registry",
+        "invalid_formal_check",
+        "invalid_import",
+        "invalid_render",
+        "stale_release"
+      ]
+    },
+    "benchmark_responsible_component": {
+      "type": "string",
+      "enum": [
+        "runtime_producer",
+        "certificate_producer",
+        "verifier",
+        "registry",
+        "formal_kernel",
+        "scientific_memory",
+        "release_manifest",
+        "handoff",
+        "hashing",
+        "unknown"
+      ]
+    },
+    "benchmark_repair_hint_kind": {
+      "type": "string",
+      "enum": [
+        "align_provenance",
+        "align_hash",
+        "align_certificate_id",
+        "align_handoff",
+        "fix_registry_entry",
+        "rerun_verification",
+        "rerun_formal_check",
+        "fix_import_report",
+        "fix_render",
+        "none",
+        "unknown"
+      ]
+    },
+    "benchmark_metric_name": {
+      "type": "string",
+      "enum": [
+        "release_reproducibility",
+        "failure_localization",
+        "certificate_completeness",
+        "registry_coverage",
+        "formal_check_coverage",
+        "scientific_memory_interpretability",
+        "repair_hint_quality",
+        "cross_domain_portability"
+      ]
+    },
+    "benchmark_metric_applicability": {
+      "type": "string",
+      "enum": [
+        "measured",
+        "not_applicable",
+        "insufficient_cases",
+        "skipped",
+        "failed_to_measure"
+      ]
+    },
+    "benchmark_metric_id": {
+      "type": "string",
+      "enum": [
+        "release_reproducibility_score",
+        "failure_localization_accuracy",
+        "certificate_completeness_score",
+        "registry_coverage_score",
+        "formal_check_coverage_score",
+        "scientific_memory_interpretability_score",
+        "repair_hint_quality_score",
+        "cross_domain_portability_score"
+      ]
+    },
+    "benchmark_producer_id": {
+      "type": "string",
+      "enum": [
+        "pcs-core",
+        "pcs-bench",
+        "provability-fabric",
+        "certifyedge",
+        "labtrust-gym",
+        "scientific-memory"
+      ]
+    },
+    "explain_quality_section_id": {
+      "type": "string",
+      "enum": [
+        "provenance",
+        "hashes",
+        "handoffs",
+        "verification",
+        "formal_checks",
+        "limitations",
+        "lineage",
+        "repair_hints"
+      ]
+    },
+    "benchmark_observed_status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed",
+        "skipped",
+        "error"
+      ]
+    },
+    "benchmark_system_outcome": {
+      "type": "string",
+      "enum": [
+        "admitted",
+        "rejected",
+        "stale",
+        "import_failed",
+        "render_failed",
+        "query_failed",
+        "comparison_failed",
+        "formal_failed",
+        "certificate_rejected",
+        "unknown"
+      ]
+    },
+    "nullable_benchmark_system_outcome": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/benchmark_system_outcome"
+        }
+      ]
+    },
+    "benchmark_detection_layer": {
+      "type": "string",
+      "enum": [
+        "runtime",
+        "certificate",
+        "verifier",
+        "registry",
+        "formal_kernel",
+        "scientific_memory",
+        "release_manifest",
+        "handoff",
+        "hashing",
+        "labtrust",
+        "certifyedge",
+        "provability_fabric",
+        "pcs_core",
+        "unknown"
+      ]
+    },
+    "metric_summary_applicability": {
+      "type": "string",
+      "enum": [
+        "measured",
+        "not_applicable",
+        "insufficient_cases",
+        "skipped",
+        "failed_to_measure"
+      ]
+    },
+    "system_admission_outcome": {
+      "type": "string",
+      "enum": [
+        "admitted",
+        "rejected",
+        "deferred",
+        "not_evaluated"
+      ]
+    },
+    "release_chain_status": {
+      "type": "string",
+      "enum": [
+        "valid",
+        "invalid",
+        "not_applicable"
+      ]
+    },
+    "certificate_status_value": {
+      "type": "string",
+      "enum": [
+        "CertificateChecked",
+        "Rejected",
+        "Stale",
+        "not_applicable"
+      ]
+    },
+    "scientific_memory_import_status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed",
+        "not_applicable"
+      ]
+    },
+    "scientific_memory_render_status": {
+      "type": "string",
+      "enum": [
+        "rendered",
+        "incomplete",
+        "not_applicable"
+      ]
+    },
+    "nullable_benchmark_responsible_component": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/benchmark_responsible_component"
+        }
+      ]
+    },
+    "nullable_benchmark_repair_hint_kind": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/benchmark_repair_hint_kind"
+        }
+      ]
+    },
+    "benchmark_input_artifact_ref": {
+      "type": "object",
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "benchmark_artifact_ref_type": {
+      "type": "string",
+      "enum": [
+        "BenchmarkCase.v0",
+        "BenchmarkRun.v0",
+        "CoverageReport.v0",
+        "FailureLocalizationResult.v0",
+        "ExplainQualityReport.v0",
+        "ProfileCoverageReport.v0",
+        "MetricSummary.v0"
+      ]
+    },
+    "benchmark_artifact_ref_role": {
+      "type": "string",
+      "enum": [
+        "producer_export",
+        "ingest_bundle",
+        "primary"
+      ]
+    },
+    "benchmark_command_entry": {
+      "type": "object",
+      "required": [
+        "command",
+        "exit_code"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "stdout_digest": {
+          "$ref": "#/$defs/hex_digest"
+        }
+      }
+    },
+    "conformance_run_ref": {
+      "type": "object",
+      "required": [
+        "suite",
+        "run_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "suite": {
+          "type": "string",
+          "minLength": 1
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed"
+          ]
+        }
+      }
+    }
+  }
+}

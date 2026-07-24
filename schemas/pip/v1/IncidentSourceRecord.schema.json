@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://post-incident-proofs.local/schemas/pip/v1/IncidentSourceRecord.schema.json",
+  "title": "IncidentSourceRecord",
+  "description": "PIP v1 incident source integrity record. Completeness is never inferred from silence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "incident_id",
+    "source_trace_digest",
+    "source_system_id",
+    "environment_id",
+    "model_version",
+    "harness_version",
+    "tool_version",
+    "policy_version",
+    "authorization_version",
+    "initial_state_commitment",
+    "final_state_commitment",
+    "observed_outcome",
+    "collection_time",
+    "collector_id",
+    "completeness",
+    "known_missing_evidence",
+    "confidentiality_class",
+    "redaction_status",
+    "integrity_envelope"
+  ],
+  "properties": {
+    "schema_version": { "const": "pip.IncidentSourceRecord.v1" },
+    "incident_id": { "type": "string", "minLength": 1 },
+    "source_trace_digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "source_system_id": { "type": "string", "minLength": 1 },
+    "environment_id": { "type": "string", "minLength": 1 },
+    "model_version": { "type": "string", "minLength": 1 },
+    "harness_version": { "type": "string", "minLength": 1 },
+    "tool_version": { "type": "string", "minLength": 1 },
+    "policy_version": { "type": "string", "minLength": 1 },
+    "authorization_version": { "type": "string", "minLength": 1 },
+    "initial_state_commitment": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "final_state_commitment": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "observed_outcome": { "type": "string", "minLength": 1 },
+    "collection_time": { "type": "string", "format": "date-time" },
+    "collector_id": { "type": "string", "minLength": 1 },
+    "completeness": {
+      "type": "string",
+      "enum": ["complete", "incomplete"]
+    },
+    "known_missing_evidence": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "confidentiality_class": {
+      "type": "string",
+      "enum": ["public", "internal", "confidential", "restricted"]
+    },
+    "redaction_status": {
+      "type": "string",
+      "enum": ["none", "partial", "full", "not_applicable"]
+    },
+    "integrity_envelope": {
+      "description": "PCS ArtifactIntegrity.v1 reference object (not a forked schema).",
+      "type": "object",
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "canonicalization_version",
+        "artifact_digest",
+        "signature"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "schema_version": { "const": "v1" },
+        "artifact_type": { "type": "string", "minLength": 1 },
+        "canonicalization_version": { "const": "v1" },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "signature": {
+          "type": "object",
+          "required": ["algorithm", "key_id", "signed_at", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "algorithm": { "const": "ed25519" },
+            "key_id": { "type": "string", "minLength": 1 },
+            "signed_at": { "type": "string", "format": "date-time" },
+            "value": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "completeness": { "const": "incomplete" } },
+        "required": ["completeness"]
+      },
+      "then": {
+        "properties": {
+          "known_missing_evidence": { "minItems": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "completeness": { "const": "complete" } },
+        "required": ["completeness"]
+      },
+      "then": {
+        "properties": {
+          "known_missing_evidence": { "maxItems": 0 }
+        }
+      }
+    }
+  ]
+}

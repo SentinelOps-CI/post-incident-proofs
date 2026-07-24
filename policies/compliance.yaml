@@ -1,30 +1,53 @@
 name: "Post-Incident-Proofs Compliance Policy"
-version: "1.0.0"
+version: "1.1.0"
 type: "compliance"
-description: "Compliance policies for post-incident-proofs system"
+description: >
+  Compliance-oriented engineering requirements for repository gates.
+  These rules describe required checks; they do not assert unimplemented
+  formal cryptographic proofs or absolute false-negative rates.
 
 rules:
   - id: "COMP-001"
-    description: "All log entries must include timestamp and monotonic counter"
+    description: >
+      Legacy log entries used by lake log_verifier checks must include the
+      timestamp and monotonic counter fields required by the verifier.
     severity: "high"
     category: "logging-compliance"
-    
+
   - id: "COMP-002"
-    description: "Bundle generation must include cryptographic proof of integrity"
+    description: >
+      Incident release and legacy bundle paths must include integrity evidence
+      appropriate to the path: ITE uses declared digests/checksums validated by
+      post-incident; legacy lake verify_bundle validates its Lean bundle shape.
+      Neither path claims a separate cryptographic signature service unless one
+      is explicitly implemented and documented.
     severity: "critical"
     category: "bundle-compliance"
-    
+
   - id: "COMP-003"
-    description: "Rate limiting must have zero false negatives"
+    description: >
+      Legacy rate-limit verifier must remain green in CI. Do not advertise
+      zero false negatives as a product guarantee beyond what the executable check covers.
     severity: "high"
     category: "rate-limiting-compliance"
-    
+
   - id: "COMP-004"
-    description: "Version control operations must be invertible"
+    description: >
+      Version diff roundtrip checks required by lake version_verifier must pass.
+      Invertibility is limited to the modeled diff operations under test.
     severity: "medium"
     category: "version-control-compliance"
-    
+
   - id: "COMP-005"
-    description: "Observability metrics must be collected for all critical operations"
+    description: >
+      Observability metrics collection required by lake observability / validate
+      gates must remain green for critical legacy operations covered by those executables.
     severity: "medium"
-    category: "observability-compliance" 
+    category: "observability-compliance"
+
+  - id: "COMP-006"
+    description: >
+      ITE documentation and release NON_CLAIMS must stay aligned with
+      PIP-ITE-00 (no causation, remediation, SDE, or partner-secret claims).
+    severity: "high"
+    category: "claim-boundary-compliance"

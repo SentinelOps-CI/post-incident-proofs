@@ -1,0 +1,12 @@
+{
+  "commitment_id": "red-bad",
+  "mapping_commitment": "sha256:20758a10a0054b06b6ed4b7a5e6d3a84974cb7f33ae505892492690cb328bad3",
+  "original_digest": "sha256:a8c22b58b2259efe287d5811699565977d8d15db2ea0009e5b7ffe406ecb4d69",
+  "protected_location_class": "protected_store",
+  "public_disclosure_class": "public_digests_only",
+  "redacted_digest": "sha256:f74a5a61d43e529873db1803db6495d07f2399757315f02c654d7c05ccde718c",
+  "redaction_manifest_digest": "sha256:beb445fc1a48a6309d8cdf2464fecf07295dc00c9d0228349ba259ebbdc94444",
+  "redaction_service_id": "pip-ite-redactor-v1",
+  "schema_version": "pip.RedactionCommitment.v1",
+  "verification_result": "pass"
+}

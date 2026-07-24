@@ -1,0 +1,20 @@
+{
+  "checksums_manifest": "checksums.json",
+  "incident_id": "inc-001",
+  "lineage_bundle": "lineage_bundle.json",
+  "morph_replay_report": "morph_replay_report.json",
+  "non_claims_path": "NON_CLAIMS.md",
+  "preservation_claims": [
+    "preservation_claims.json"
+  ],
+  "public_artifact_digests": {
+    "lineage_output": "sha256:bcd2cfd40445fb3ad7654f7b77a4443e23d709ebcf5579e5e13e70ee79cc0d8a",
+    "source_trace": "sha256:961828b5dc6896a44c84bcd6f38616232fcf974077134ad43e8049027a7c9b50"
+  },
+  "redaction_commitments": [
+    "redaction_commitment.json"
+  ],
+  "release_id": "rel-001",
+  "schema_version": "pip.IncidentRelease.v1",
+  "source_record": "source_record.json"
+}

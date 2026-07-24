@@ -1,3 +1,8 @@
+# Optional observability scaffold only — not part of ITE verification.
+# Mounted provisioning files (dashboards/, datasources/, prometheus.yml, alerts.yml)
+# are not shipped in this repository; supply them locally before `docker compose up`.
+# See README.md "Optional Docker compose".
+
 version: "3.8"
 
 services:

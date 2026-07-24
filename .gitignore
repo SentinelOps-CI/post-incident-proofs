@@ -24,6 +24,8 @@ target/
 *~
 .DS_Store
 Thumbs.db
+*.bak
+*.orig
 
 # Logs and temporary files
 *.log
@@ -36,8 +38,15 @@ temp/
 # Test artifacts
 test-results/
 coverage/
+htmlcov/
+.coverage
+.coverage.*
 *.prof
 *.profraw
+.hypothesis/
+.tox/
+.nox/
+.cache/
 
 # Docker
 .dockerignore
@@ -73,7 +82,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Python (if any Python components)
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
@@ -84,10 +93,20 @@ venv/
 .venv/
 pip-log.txt
 pip-delete-this-directory.txt
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.eggs/
+*.egg
+python/**/pytest-cache-files-*/
 
-# Rust (if any Rust components)
-Cargo.lock
-target/
+# Rust
+# Keep rust/post-incident-kernel/Cargo.lock tracked for reproducible builds.
+/target/
+rust/**/target/
 *.rs.bk
 
 # OS generated files
@@ -97,4 +116,6 @@ target/
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db 
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/

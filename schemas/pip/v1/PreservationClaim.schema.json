@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://post-incident-proofs.local/schemas/pip/v1/PreservationClaim.schema.json",
+  "title": "PreservationClaim",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "claim_id",
+    "claim_class",
+    "inputs",
+    "outputs",
+    "assumptions",
+    "checker_id",
+    "checker_version",
+    "evidence_refs"
+  ],
+  "properties": {
+    "schema_version": { "const": "pip.PreservationClaim.v1" },
+    "claim_id": { "type": "string", "minLength": 1 },
+    "claim_class": {
+      "type": "string",
+      "enum": [
+        "digest_lineage_preserved",
+        "retained_event_order_preserved",
+        "selected_failure_predicate_preserved",
+        "authorization_chain_preserved",
+        "relevant_state_projection_equivalent",
+        "redacted_values_irrelevant_to_declared_predicate",
+        "transformation_graph_acyclic",
+        "no_undeclared_source_artifact"
+      ]
+    },
+    "inputs": { "type": "object" },
+    "outputs": { "type": "object" },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "checker_id": { "type": "string", "minLength": 1 },
+    "checker_version": { "type": "string", "minLength": 1 },
+    "evidence_refs": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "predicate_ast": {
+      "description": "Optional supported failure-predicate AST. Absent or unsupported => indeterminate.",
+      "type": "object"
+    }
+  }
+}

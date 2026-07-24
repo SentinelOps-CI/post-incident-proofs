@@ -1,0 +1,12 @@
+{
+  "files": {
+    "NON_CLAIMS.md": "sha256:eac49d36c89f5497f787141f0e55bbc72261c7e209699621d5ccd1f578efe545",
+    "incident_release.json": "sha256:8c282cd4782050095a9dbb2b0208e35d9f4988f712a1205badd81c9699284066",
+    "lineage_bundle.json": "sha256:0698794a02abeafd4264859d48c2e765bc6e96d9e2bb0e1e251dc778ebf18be9",
+    "morph_replay_report.json": "sha256:6900dad92caec4120c6c61d779c9e93cfa2264872e3b5e699b80e984ed1c7893",
+    "preservation_claims.json": "sha256:c6de377f026e58692916aba208f9c081788ec4e62b5dc4f9e96a18219a833c4e",
+    "redaction_commitment.json": "sha256:1d316d392defb814cbf721ee7b8ffc2659c4d2f9bdaf33b17fdce570d996d326",
+    "source_record.json": "sha256:4fcf97625de9ca16279327e8f060a24682dd775d126b528908cb8e506e04a129"
+  },
+  "schema_version": "pip.Checksums.v1"
+}
