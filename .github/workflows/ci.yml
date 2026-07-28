@@ -29,6 +29,11 @@ jobs:
       - name: System validation
         run: lake exe validate
 
+  pf-core-forensic-gate:
+    name: PF-Core forensic gate
+    needs: verify
+    uses: ./.github/workflows/pf-core-forensic-gate.yml
+
   benchmark:
     name: Benchmark Gate
     runs-on: ubuntu-latest
